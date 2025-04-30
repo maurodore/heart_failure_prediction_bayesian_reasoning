@@ -12,6 +12,10 @@ from pgmpy.estimators import HillClimbSearch, TreeSearch, BDeuScore, MaximumLike
 from pgmpy.inference import VariableElimination
 from typing import Dict, Optional 
 from pgmpy.factors.discrete import State
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+from tqdm.auto import tqdm
+import time
 
 
 def plot_values(values,
@@ -49,3 +53,26 @@ def plot_values(values,
 
     plt.tight_layout()
     plt.show()
+
+
+def predict(X_test, evidence_dict, target_variable, inference_engine):
+    predictions_list = []
+
+    print(f"\nPredizione di '{target_variable}' per il Test Set...")
+    for index, row in tqdm(X_test.iterrows(), total=X_test.shape[0], desc="Predicting Test"):
+        # Evidenza dalla riga corrente di X_test
+        try:
+            query_result = inference_engine.query(
+                variables=[target_variable],
+                evidence=evidence_dict,
+                show_progress=False
+            )
+            predicted_idx = np.argmax(query_result.values)
+
+            predictions_list.append(predicted_idx)
+        except Exception as e:
+            print(f"\nErrore predizione riga {index}: {e}")
+            predictions_list.append(np.nan) # Aggiungi NaN o altro placeholder
+
+    # 3. Crea la Serie di predizioni 
+    return pd.Series(predictions_list, index=X_test.index)
