@@ -1,4 +1,3 @@
-import pathlib
 import pandas as pd
 from sklearn.preprocessing import LabelEncoder
 import matplotlib.pyplot as plt
@@ -6,7 +5,9 @@ import seaborn as sns
 import numpy as np
 import networkx as nx
 import matplotlib.pyplot as plt
+import pathlib
 
+#from pathlib import Path
 from pgmpy.models import BayesianNetwork
 from pgmpy.estimators import HillClimbSearch, TreeSearch, BDeuScore, MaximumLikelihoodEstimator, K2Score
 from pgmpy.inference import VariableElimination
@@ -29,7 +30,7 @@ def plot_values(values,
     nrows = int(np.ceil(num_models / ncols))
 
     # Create subplots
-    _, axes = plt.subplots(nrows, ncols, figsize=(3.5 * ncols, 3.5 * nrows), sharey=True, squeeze=False)
+    fig, axes = plt.subplots(nrows, ncols, figsize=(3.5 * ncols, 3.5 * nrows), sharey=True, squeeze=False)
     axes_flat = axes.flatten() 
 
     plot_index = 0
