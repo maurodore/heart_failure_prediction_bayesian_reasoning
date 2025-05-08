@@ -77,3 +77,50 @@ def predict(X_test, evidence_dict, target_variable, inference_engine):
 
     # 3. Crea la Serie di predizioni 
     return pd.Series(predictions_list, index=X_test.index)
+
+
+def show_markov_blanket_nx(network, project_dir, initial_node, blanket=[]):
+    G = nx.DiGraph()
+    nodes = network.nodes()
+    edges = network.edges()
+    
+    # Aggiunge i nodi
+    for node in nodes: 
+
+        if node == initial_node:
+            G.add_node(node, level=1, color='red')
+        elif node in blanket:
+            G.add_node(node, level=2, color='orange')
+        else:
+            G.add_node(node, level=3, color='blue')
+
+    # Aggiunge gli archi
+    G.add_edges_from(edges)
+
+    # Colori per ogni nodo
+    node_colors = [G.nodes[n]['color'] for n in G.nodes()]
+
+    # Layout circolare (puoi scegliere anche spring_layout o altri)
+    pos = nx.circular_layout(G)
+
+    plt.figure(figsize=(7, 7))
+    nx.draw(
+        G,
+        pos,
+        with_labels=True,
+        arrows=True,
+        node_color=node_colors,
+        node_size=2000,
+        font_size=9,
+        edgecolors='black',
+        arrowsize=20,
+    )
+    plt.title('Markov Blanket for ' + initial_node)
+
+    # Salva l'immagine
+    plt.savefig(pathlib.Path.joinpath(project_dir,"out/hc_constraint_model.png"))
+
+    plt.show()
+
+
+        

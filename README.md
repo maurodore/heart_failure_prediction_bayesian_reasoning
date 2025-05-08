@@ -16,7 +16,7 @@ Cholesterol: serum cholesterol [mm/dl]
 FastingBS: fasting blood sugar [1: if FastingBS > 120 mg/dl, 0: otherwise]
 RestingECG: resting electrocardiogram results [Normal: Normal, ST: having ST-T wave abnormality (T wave inversions and/or ST elevation or depression of > 0.05 mV), LVH: showing probable or definite left ventricular hypertrophy by Estes' criteria]
 MaxHR: maximum heart rate achieved [Numeric value between 60 and 202]
-ExerciseAngina: exercise-induced angina [Y: Yes, N: No]
-Oldpeak: oldpeak = ST [Numeric value measured in depression]
+ExerciseAngina: exercise-induced angina [Y: Yes, N: No] 'N' → 0 'Y' → 1
+Oldpeak: oldpeak = ST [Numeric value measured in depression] (0, 1, 2)
 ST_Slope: the slope of the peak exercise ST segment [Up: upsloping, Flat: flat, Down: downsloping]
 HeartDisease: output class [1: heart disease, 0: Normal]
