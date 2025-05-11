@@ -17,7 +17,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from tqdm.auto import tqdm
 import time
-
+from sklearn.metrics import accuracy_score
 
 def plot_values(values,
                 label_map: Optional[Dict[int, str]] = None,
