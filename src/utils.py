@@ -7,7 +7,6 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import pathlib
 
-#from pathlib import Path
 from pgmpy.models import BayesianNetwork
 from pgmpy.estimators import HillClimbSearch, TreeSearch, BDeuScore, MaximumLikelihoodEstimator, K2Score
 from pgmpy.inference import VariableElimination
@@ -17,7 +16,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from tqdm.auto import tqdm
 import time
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, f1_score
 
 def plot_values(values,
                 label_map: Optional[Dict[int, str]] = None,
@@ -29,7 +28,6 @@ def plot_values(values,
     ncols = int(np.ceil(np.sqrt(num_models)))
     nrows = int(np.ceil(num_models / ncols))
 
-    # Create subplots
     fig, axes = plt.subplots(nrows, ncols, figsize=(3.5 * ncols, 3.5 * nrows), sharey=True, squeeze=False)
     axes_flat = axes.flatten() 
 
@@ -48,7 +46,6 @@ def plot_values(values,
 
         plot_index += 1
 
-    # Hide any unused axes at the end
     for i in range(plot_index, len(axes_flat)):
          fig.delaxes(axes_flat[i])
 
@@ -61,7 +58,6 @@ def predict(X_test, evidence_dict, target_variable, inference_engine):
 
     print(f"\nPredizione di '{target_variable}' per il Test Set...")
     for index, row in tqdm(X_test.iterrows(), total=X_test.shape[0], desc="Predicting Test"):
-        # Evidenza dalla riga corrente di X_test
         try:
             query_result = inference_engine.query(
                 variables=[target_variable],
@@ -73,9 +69,8 @@ def predict(X_test, evidence_dict, target_variable, inference_engine):
             predictions_list.append(predicted_idx)
         except Exception as e:
             print(f"\nErrore predizione riga {index}: {e}")
-            predictions_list.append(np.nan) # Aggiungi NaN o altro placeholder
+            predictions_list.append(np.nan) 
 
-    # 3. Crea la Serie di predizioni 
     return pd.Series(predictions_list, index=X_test.index)
 
 
@@ -84,7 +79,6 @@ def show_markov_blanket_nx(network, project_dir, initial_node, blanket=[]):
     nodes = network.nodes()
     edges = network.edges()
     
-    # Aggiunge i nodi
     for node in nodes: 
 
         if node == initial_node:
@@ -94,13 +88,10 @@ def show_markov_blanket_nx(network, project_dir, initial_node, blanket=[]):
         else:
             G.add_node(node, level=3, color='blue')
 
-    # Aggiunge gli archi
     G.add_edges_from(edges)
 
-    # Colori per ogni nodo
     node_colors = [G.nodes[n]['color'] for n in G.nodes()]
 
-    # Layout circolare (puoi scegliere anche spring_layout o altri)
     pos = nx.circular_layout(G)
 
     plt.figure(figsize=(7, 7))
@@ -117,7 +108,6 @@ def show_markov_blanket_nx(network, project_dir, initial_node, blanket=[]):
     )
     plt.title('Markov Blanket for ' + initial_node)
 
-    # Salva l'immagine
     plt.savefig(pathlib.Path.joinpath(project_dir,"out/hc_constraint_model.png"))
 
     plt.show()
